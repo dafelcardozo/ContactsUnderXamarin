@@ -11,26 +11,26 @@ namespace App1
     [Activity(Label = "Contacts activity", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
-        int count = 1;
-
+        private List<Contact> Contacts = new List<Contact>();
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
 
             SetContentView(Resource.Layout.Main);
-            Button button = FindViewById<Button>(Resource.Id.MyButton);
-            button.Click += delegate { button.Text = string.Format("{0} clicks!", count++); };
 
-            Spinner countriesSpinner = FindViewById<Spinner>(Resource.Id.countriesSpinner);
+            //var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            //SetActionBar(toolbar);
+            //ActionBar.Title = "My Toolbar";
 
-            ArrayAdapter<Country> adapter = new ArrayAdapter<Country>(this, Android.Resource.Layout.SimpleListItem1, new List<Country>());
-            countriesSpinner.Adapter = adapter;
+            var AddContact = FindViewById<Button>(Resource.Id.AddContact);
+            AddContact.Click += delegate {
+                StartActivity(typeof(ContactActivity));
+            };
+            
+            
+        }
 
-            new ContactsService().RefreshCountries().ContinueWith(l => {
-                adapter.AddAll(l.Result);
-                adapter.NotifyDataSetChanged();
-            });
-        }        
+     
     }
 }
 

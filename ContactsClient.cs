@@ -52,6 +52,49 @@ public class Country
     }
 }
 
+public class Contact
+{
+    public string Company { get; set; }
+    public string LastName { get; set; }
+    public string Name { get; set; }
+    public Photo Photo { get; set; }
+    public List<Phone> PhoneNumbers { get; set; }
+    public List<Email> EmailsAddress { get; set; }
+}
+
+
+public class Email
+{
+    public Contact Contact {get; set;}
+    public String Address { get; set; }
+}
+
+public class Phone
+{
+    public Contact Contact { get; set; }
+    public Country Country { get; set; }
+    public string Number { get; set; }
+}
+
+public class Photo
+{
+    public byte[] Raw { get; set; }
+}
+
+public class Location
+{
+    double Longitude { get; set; }
+    double Latitude { get; set; }
+}
+
+public class ContactsReport
+{
+    public List<Contact> Contacts { get; set; }
+    public Location Location { get; set; }
+    public string RegisteredBy { get; set; }
+    public int Type { get; set; }
+}
+
 
 public class ContactsDB
 {
@@ -71,7 +114,7 @@ public class ContactsDB
         db.Insert(data);
         
     }
-    public List<Country> Coutries
+    public List<Country> Countries
     {
         get
         {
