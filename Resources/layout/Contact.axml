@@ -33,8 +33,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/LastName" />
+  <ImageView
+      android:src="@android:drawable/ic_menu_gallery"
+      android:layout_width="fill_parent"
+      android:layout_height="300.0dp"
+      android:id="@+id/imageView1"
+      android:adjustViewBounds="true" />
+  <Button
+        android:text="Take picture"
+        android:id="@+id/TakePicture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
     <Button
-        android:text="ADD"
+        android:text="ADD PHONE"
         android:id="@+id/AddPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,7 +58,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/phonesListView" />
     <Button
-        android:text="ADD"
+        android:text="ADD EMAIL"
         android:id="@+id/AddEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
