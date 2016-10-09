@@ -26,6 +26,8 @@ namespace App1
 		
 		public static void UpdateIdValues()
 		{
+			global::SQLite.Net.Platform.XamarinAndroid.Resource.String.ApplicationName = global::App1.Resource.String.ApplicationName;
+			global::SQLite.Net.Platform.XamarinAndroid.Resource.String.Hello = global::App1.Resource.String.Hello;
 		}
 		
 		public partial class Attribute
@@ -60,23 +62,50 @@ namespace App1
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f060002
-			public const int AddContact = 2131099650;
+			// aapt resource value: 0x7f06000c
+			public const int AddContact = 2131099660;
 			
-			// aapt resource value: 0x7f060000
-			public const int countriesSpinner = 2131099648;
-			
-			// aapt resource value: 0x7f060003
-			public const int linearLayout1 = 2131099651;
-			
-			// aapt resource value: 0x7f060001
-			public const int textItem = 2131099649;
-			
-			// aapt resource value: 0x7f060004
-			public const int textView1 = 2131099652;
+			// aapt resource value: 0x7f060007
+			public const int AddEmail = 2131099655;
 			
 			// aapt resource value: 0x7f060005
-			public const int toolbar = 2131099653;
+			public const int AddPhone = 2131099653;
+			
+			// aapt resource value: 0x7f060001
+			public const int CancelContact = 2131099649;
+			
+			// aapt resource value: 0x7f060003
+			public const int ContactNameText = 2131099651;
+			
+			// aapt resource value: 0x7f06000d
+			public const int ContactsList = 2131099661;
+			
+			// aapt resource value: 0x7f06000a
+			public const int Email = 2131099658;
+			
+			// aapt resource value: 0x7f060004
+			public const int LastName = 2131099652;
+			
+			// aapt resource value: 0x7f06000e
+			public const int PhoneNumber = 2131099662;
+			
+			// aapt resource value: 0x7f060002
+			public const int SaveContact = 2131099650;
+			
+			// aapt resource value: 0x7f060009
+			public const int countriesSpinner = 2131099657;
+			
+			// aapt resource value: 0x7f060008
+			public const int emailsListView = 2131099656;
+			
+			// aapt resource value: 0x7f060006
+			public const int phonesListView = 2131099654;
+			
+			// aapt resource value: 0x7f06000b
+			public const int textItem = 2131099659;
+			
+			// aapt resource value: 0x7f060000
+			public const int toolbar = 2131099648;
 			
 			static Id()
 			{
@@ -95,13 +124,22 @@ namespace App1
 			public const int Contact = 2130903040;
 			
 			// aapt resource value: 0x7f030001
-			public const int layout1 = 2130903041;
+			public const int ContactItem = 2130903041;
 			
 			// aapt resource value: 0x7f030002
-			public const int Main = 2130903042;
+			public const int Email = 2130903042;
 			
 			// aapt resource value: 0x7f030003
-			public const int toolbar = 2130903043;
+			public const int layout1 = 2130903043;
+			
+			// aapt resource value: 0x7f030004
+			public const int Main = 2130903044;
+			
+			// aapt resource value: 0x7f030005
+			public const int Phone = 2130903045;
+			
+			// aapt resource value: 0x7f030006
+			public const int toolbar = 2130903046;
 			
 			static Layout()
 			{

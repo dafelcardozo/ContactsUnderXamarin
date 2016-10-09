@@ -1,14 +1,5 @@
 ﻿
 using System;
-using Android.App;
-using Android.Content;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Android.OS;
-using System.Net;
-using System.IO;
-using System.Json;
 using System.Threading.Tasks;
 
 
@@ -16,18 +7,19 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using SQLite;
+using SQLiteNetExtensions.Attributes;
 
-public class ContactsService 
+public class ContactsRestService 
 {
     HttpClient client;
 
-  public ContactsService()
+  public ContactsRestService()
   {
     client = new HttpClient();
   }
 
  
-    public async Task<List<Country>> RefreshCountries()
+    public async Task<List<Country>> GetCountries()
     {
         var uri = new Uri("https://contactmanager.banlinea.com/api/countries");
         var response = await client.GetAsync(uri);
@@ -54,26 +46,43 @@ public class Country
 
 public class Contact
 {
+    [PrimaryKey, AutoIncrement]
+    public int Id { get; set; }
     public string Company { get; set; }
     public string LastName { get; set; }
     public string Name { get; set; }
-    public Photo Photo { get; set; }
-    public List<Phone> PhoneNumbers { get; set; }
-    public List<Email> EmailsAddress { get; set; }
+
+    //   public Photo Photo { get; set; }
+    //[OneToMany]
+    //public List<Phone> PhoneNumbers { get; set; }
+    //[OneToMany]
+    //public List<Email> EmailsAddress { get; set; }
 }
 
 
 public class Email
 {
+    [ForeignKey(typeof(Contact))]
     public Contact Contact {get; set;}
-    public String Address { get; set; }
+    public string Address { get; set; }
+    [PrimaryKey, AutoIncrement]
+    public int Id { get; set; }
 }
 
 public class Phone
 {
+    [PrimaryKey, AutoIncrement]
+    public int Id { get; set; }
+    [ForeignKey(typeof(Contact))]
     public Contact Contact { get; set; }
+    [ForeignKey(typeof(Country))]
     public Country Country { get; set; }
     public string Number { get; set; }
+
+    public override string ToString()
+    {
+        return Number;
+    }
 }
 
 public class Photo
@@ -100,15 +109,21 @@ public class ContactsDB
 {
     string folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
 
-    private void createDatabase(string path)
+    public ContactsDB()
     {
-        var connection = new SQLiteAsyncConnection(System.IO.Path.Combine(folder, "contacts.db"));
-        connection.CreateTableAsync<Country>();
-                
-            
+        createDatabase();
     }
 
-    private void insert(Country data)
+    private void createDatabase()
+    {
+        var connection = new SQLiteConnection(System.IO.Path.Combine(folder, "contacts.db"));
+        connection.CreateTable<Country>();
+        connection.CreateTable<Contact>();
+
+
+    }
+
+    public void Insert(object data)
     {
         var db = new SQLiteConnection(System.IO.Path.Combine(folder, "contacts.db"));
         db.Insert(data);
@@ -122,4 +137,13 @@ public class ContactsDB
             return db.Query<Country>("select * from Country");
         }
     }
+    public List<Contact> Contacts
+    {
+        get
+        {
+            var db = new SQLiteConnection(System.IO.Path.Combine(folder, "contacts.db"));
+            return db.Query<Contact>("select * from Contact");
+        }
+    }
+
 }
