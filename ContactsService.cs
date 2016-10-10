@@ -62,21 +62,25 @@ public class Contact
 
 public class Email
 {
-    [ForeignKey(typeof(Contact))]
-    public Contact Contact {get; set;}
-    public string Address { get; set; }
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
+    [ForeignKey(typeof(Contact))]
+    public int ContactID { get; set; }
+    public string Address { get; set; }
+    //[ManyToOne(CascadeOperations = CascadeOperation.All)]
+    //public Contact Contact {get; set;}
 }
 
 public class Phone
 {
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
-    [ForeignKey(typeof(Contact))]
+    /*
+    [ManyToOne(CascadeOperations = CascadeOperation.All)]
     public Contact Contact { get; set; }
-    [ForeignKey(typeof(Country))]
+    [ManyToOne(CascadeOperations = CascadeOperation.All)]
     public Country Country { get; set; }
+    */
     public string Number { get; set; }
 
     public override string ToString()
@@ -119,15 +123,20 @@ public class ContactsDB
         var connection = new SQLiteConnection(System.IO.Path.Combine(folder, "contacts.db"));
         connection.CreateTable<Country>();
         connection.CreateTable<Contact>();
-
-
+        connection.CreateTable<Email>();
+        connection.CreateTable<Phone>();
     }
 
     public void Insert(object data)
     {
         var db = new SQLiteConnection(System.IO.Path.Combine(folder, "contacts.db"));
-        db.Insert(data);
-        
+        db.Insert(data);   
+    }
+    public void Update(object data)
+    {
+        var db = new SQLiteConnection(System.IO.Path.Combine(folder, "contacts.db"));
+        db.Update(data);
+
     }
     public List<Country> Countries
     {
@@ -146,4 +155,9 @@ public class ContactsDB
         }
     }
 
+    public List<Email> ContactEmails(Contact Contact)
+    {        
+        var db = new SQLiteConnection(System.IO.Path.Combine(folder, "contacts.db"));
+        return db.Query<Email>("select * from Email e where e.Contact = "+Contact.Id);   
+    }
 }

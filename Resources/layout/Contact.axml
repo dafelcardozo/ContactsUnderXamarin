@@ -23,46 +23,49 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
     </LinearLayout>
-    <EditText
-        android:inputType="textPersonName"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ContactNameText" />
-    <EditText
-        android:inputType="textPersonName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/LastName" />
-  <ImageView
-      android:src="@android:drawable/ic_menu_gallery"
-      android:layout_width="fill_parent"
-      android:layout_height="300.0dp"
-      android:id="@+id/imageView1"
-      android:adjustViewBounds="true" />
-  <Button
-        android:text="Take picture"
-        android:id="@+id/TakePicture"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
-    <Button
-        android:text="ADD PHONE"
-        android:id="@+id/AddPhone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content">
+        <ImageView
+            android:src="@android:drawable/ic_menu_gallery"
+            android:layout_width="128dp"
+            android:layout_height="60dp"
+            android:id="@+id/imageView1"
+            android:adjustViewBounds="true" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <EditText
+                android:inputType="textPersonName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ContactNameText"
+                android:hint="Nombre" />
+            <EditText
+                android:inputType="textPersonName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/LastName"
+                android:hint="Apellido" />
+        </LinearLayout>
+    </LinearLayout>
+<!--
     <ListView
         android:minWidth="25px"
         android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/phonesListView" />
-    <Button
-        android:text="ADD EMAIL"
-        android:id="@+id/AddEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        -->
+
+  <Button
+     android:text="+"
+     android:id="@+id/AddEmail"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     />
     <ListView
         android:minWidth="25px"
         android:minHeight="25px"

@@ -9,6 +9,8 @@ using Android.Content.PM;
 using Java.IO;
 using Android.Graphics;
 using Android.Net;
+using Android.Views;
+using Newtonsoft.Json;
 
 namespace App1
 {
@@ -25,37 +27,47 @@ namespace App1
             SetActionBar(toolbar);
             ActionBar.Title = "New contact";
 
-            var PhonesAdapter = new ArrayAdapter<Phone>(this, Resource.Layout.Phone, new List<Phone>());
+            /*
+            var Phones = new List<Phone> { new Phone() };
+            var PhonesAdapter = new ArrayAdapter<Phone>(this, Resource.Layout.Phone, Phones);
             var phonesListView = FindViewById<ListView>(Resource.Id.phonesListView);
             phonesListView.Adapter = PhonesAdapter;
+            */
+            //var AddPhone = FindViewById(Resource.Id.AddPhone);
+            //AddPhone.Click += (sender, e) => PhonesAdapter.Add(new Phone());
+            var Contact = JsonConvert.DeserializeObject < Contact>(Intent.GetStringExtra("Contact"));
+            TextView ContactNameText = FindViewById<TextView>(Resource.Id.ContactNameText);
+            TextView LastName = FindViewById<TextView>(Resource.Id.LastName);
 
-            var AddPhone = FindViewById(Resource.Id.AddPhone);
-            AddPhone.Click += (sender, e) => PhonesAdapter.Add(new Phone());
-            var EmailsAdapter = new ArrayAdapter<Email>(this, Resource.Layout.Email, new List<Email>());
+            ContactNameText.Text = Contact.Name ;
+            LastName.Text = Contact.LastName ;
+
+            var EmailsAdapter = new EmailsAdapter(this, Contact);     
             var EmailsListView = FindViewById<ListView>(Resource.Id.emailsListView);
             EmailsListView.Adapter = EmailsAdapter;
 
-            var AddEmail = FindViewById(Resource.Id.AddEmail);
-            AddEmail.Click += (sender, e) => EmailsAdapter.Add(new Email());
+            var AddEmail = FindViewById<Button>(Resource.Id.AddEmail);
+            AddEmail.Click += (sender, e) => EmailsAdapter.AddEmail();
 
-            var CancelEdit = FindViewById<Button>(Resource.Id.CancelContact);
-            CancelEdit.Click += (sender, e) =>
+
+            FindViewById<Button>(Resource.Id.CancelContact).Click += (sender, e) =>
             {
                 var intent = new Intent(this, typeof(MainActivity))
                        .SetFlags(ActivityFlags.ReorderToFront);
                 StartActivity(intent);
             };
-            var SaveContact = FindViewById<Button>(Resource.Id.SaveContact);
-            SaveContact.Click += (sender, e) =>
+            FindViewById<Button>(Resource.Id.SaveContact).Click += (sender, e) =>
             {
-                TextView ContactNameText = FindViewById<TextView>(Resource.Id.ContactNameText);
-                TextView LastName = FindViewById<TextView>(Resource.Id.LastName);
-
-                var Contact = new Contact();
                 Contact.Name = ContactNameText.Text;
                 Contact.LastName = LastName.Text;
 
-                new ContactsDB().Insert(Contact);
+                if (Contact.Id == 0)
+                {
+                    new ContactsDB().Insert(Contact);
+                } else
+                {
+                    new ContactsDB().Update(Contact);
+                }
 
                 var intent = new Intent(this, typeof(MainActivity))
                        .SetFlags(ActivityFlags.ReorderToFront);
@@ -86,9 +98,9 @@ namespace App1
                 CreateDirectoryForPictures();
             }
 
-            Button button = FindViewById<Button>(Resource.Id.TakePicture);
+//            Button button = FindViewById<Button>(Resource.Id.TakePicture);
             _imageView = FindViewById<ImageView>(Resource.Id.imageView1);
-            button.Click += TakeAPicture;
+            _imageView.Click += TakeAPicture;
 
         }
         ImageView _imageView;
@@ -160,13 +172,12 @@ namespace App1
         {
             // First we get the the dimensions of the file on disk
             BitmapFactory.Options options = new BitmapFactory.Options { InJustDecodeBounds = true };
-            //BitmapFactory.DecodeFile(fileName, options);
+            BitmapFactory.DecodeFile(fileName, options);
 
             // Next we calculate the ratio that we need to resize the image by
             // in order to fit the requested dimensions.
-            //int outHeight = 128;// options.OutHeight;
-            //int outWidth = 60; // options.OutWidth;
-            /*
+            int outHeight = options.OutHeight;
+            int outWidth = options.OutWidth;
             int inSampleSize = 1;
 
             if (outHeight > height || outWidth > width)
@@ -175,14 +186,69 @@ namespace App1
                                    ? outHeight / height
                                    : outWidth / width;
             }
-            */
-            // Now we will load the image and have BitmapFactory resize it for us.
-            options.InSampleSize = 10;
-            options.InJustDecodeBounds = false;
-            options.InScaled = true;
-            Bitmap resizedBitmap = BitmapFactory.DecodeFile(fileName, options);
 
+            // Now we will load the image and have BitmapFactory resize it for us.
+            options.InSampleSize = inSampleSize;
+            options.InJustDecodeBounds = false;
+            Bitmap resizedBitmap = BitmapFactory.DecodeFile(fileName, options);
             return resizedBitmap;
         }
+    }
+    public class EmailsAdapter : BaseAdapter
+    {
+        readonly List<Email> Emails = new List<Email> { new Email () };
+        readonly Activity _activity;
+        readonly Contact Contact;
+
+        public EmailsAdapter(Activity activity, Contact contact)
+        {
+            _activity = activity;
+            this.Contact = contact;
+        }
+        private void FillContacts()
+        {
+            ContactsDB db = new ContactsDB();
+            Emails.Clear();
+            Emails.AddRange(db.ContactEmails(Contact));
+        }
+
+        public override int Count
+        {
+            get { return Emails.Count; }
+        }
+
+        public override Java.Lang.Object GetItem(int position)
+        {
+            // could wrap a Contact in a Java.Lang.Object
+            // to return it here if needed
+            return null;// Emails[position];
+        }
+
+        public override long GetItemId(int position)
+        {
+            return Emails[position].Id;
+        }
+        public void AddEmail()
+        {
+            ContactsDB db = new ContactsDB();
+            Email email = new global::Email();
+            db.Insert(email);
+            Emails.Add(email);
+            NotifyDataSetChanged();
+        }
+
+        public override View GetView(int position, View convertView, ViewGroup parent)
+        {
+            var view = convertView ?? _activity.LayoutInflater.Inflate(Resource.Layout.Email, parent, false);
+            var Email = view.FindViewById<TextView>(Resource.Id.Email);
+            Email.Text = Emails[position].Address;       
+            Email.TextChanged += (sender, e) => {
+                Emails[position].Address = Email.Text;
+                ContactsDB db = new ContactsDB();
+                db.Update(Emails[position]);
+            };
+            return view;
+        }
+
     }
 }
